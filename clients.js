@@ -292,9 +292,18 @@ deleteBtn.addEventListener('click', () => {
   persist();
   renderCustomers(customers);
   closeModal();
+  if (window.MeasureSync && window.MeasureSync.pushNow) window.MeasureSync.pushNow(customers);
 });
 
 renderCustomers();
 
 // Focus search on page load
 setTimeout(() => { try { searchInput.focus(); } catch(_){} }, 0);
+
+// re-render when remote updates arrive
+window.addEventListener('measure-sync-updated', () => {
+  customers = JSON.parse(localStorage.getItem('customers')) || [];
+  const q = searchInput.value.trim();
+  const filtered = customers.filter(c => matchesQuery(c, q));
+  renderCustomers(filtered);
+});
