@@ -53,6 +53,13 @@ body {
     animation: fadeUp .4s ease both;
 }
 
+/* Mobile responsiveness */
+@media (max-width: 520px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .input-group, .form-actions { width: 100%; }
+  .app { padding: 16px; }
+}
+
 .actions {
     margin-top: 20px;
     display: flex;
@@ -122,6 +129,7 @@ button {
     border: 1px solid #ddd;
     border-radius: 8px;
     transition: border-color .2s ease, box-shadow .2s ease, transform .05s ease;
+    width: 100%;
 }
 .form-actions {
     grid-column: 1 / -1;
