@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clients - E&D MeasurePro</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6a1b9a">
+</head>
+<body>
+  <div class="app">
+    <nav class="navbar">
+      <a href="index.html" class="brand">E&D's Measure<span>Pro</span></a>
+    </nav>
+
+    <section class="welcome">
+      <h3>Clients</h3>
+      <p>All saved customers and measurements. Use search to find a customer quickly.</p>
+    </section>
+
+    <section class="search-bar">
+      <input id="search" type="search" placeholder="Search by name, phone, or measurement...">
+      <button id="clear-search">Clear</button>
+      <ul id="search-suggestions" class="suggestions" style="display:none"></ul>
+    </section>
+
+    <div class="customer-list" id="customer-list">
+      <!-- Cards will be rendered here -->
+    </div>
+
+    <nav class="bottom-nav">
+      <a class="bottom-link" href="index.html">Home</a>
+      <a class="bottom-link" href="backup.html">Backup</a>
+      <a class="bottom-link" href="settings.html">Settings</a>
+    </nav>
+    <div id="detail-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <button id="modal-close" class="modal-close">×</button>
+        <h3 id="modal-title"></h3>
+        <div id="modal-body"></div>
+        <div class="modal-actions">
+          <button id="edit-customer">Edit</button>
+          <button id="save-customer" style="display:none">Save</button>
+          <button id="cancel-edit" class="secondary" style="display:none">Cancel</button>
+          <button id="delete-customer" class="danger">Delete</button>
+          <button id="close-modal" class="secondary">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="clients.js"></script>
+  <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+</body>
+</html>

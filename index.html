@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E&D MEASUREPRO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6a1b9a">
+</head>
+<body>
+    <div class="app">
+     <nav class="navbar">
+      <a href="index.html" class="brand">E&D's Measure<span>Pro</span></a>
+     </nav>
+     <section class="welcome">
+        <h3>Welcome, Madam Ebere</h3>
+        <p>Manage all your customers' measurements efficiently!</p>
+     </section>
+      <div class="actions">
+        <button class="add-btn" id="add-btn">+ Add Customer</button>
+        <button class="search-btn" id="search-customers-btn">Search Customers</button>
+      </div>
+    
+        <section class="add-customer" id="add-customer-form">
+            <h3>Add Customer</h3>
+            <form id="customer-form" class="form-grid">
+                <div class="input-group">
+                  <label for="name">Customer Name</label>
+                  <input id="name" type="text" name="name" placeholder="e.g. Adaeze Okafor" required>
+                </div>
+                <div class="input-group">
+                  <label for="phone">Phone Number</label>
+                  <input id="phone" type="text" name="phone" placeholder="e.g. 0803..." required>
+                </div>
+                <div class="input-group">
+                  <label for="bust">Bust</label>
+                  <input id="bust" type="number" name="bust" placeholder="Bust" required>
+                </div>
+                <div class="input-group">
+                  <label for="waist">Waist</label>
+                  <input id="waist" type="number" name="waist" placeholder="Waist" required>
+                </div>
+                <div class="input-group">
+                  <label for="hip">Hip</label>
+                  <input id="hip" type="number" name="hip" placeholder="Hip" required>
+                </div>
+                <div class="input-group">
+                  <label for="shoulder">Shoulder</label>
+                  <input id="shoulder" type="number" name="shoulder" placeholder="Shoulder" required>
+                </div>
+                <div class="input-group">
+                  <label for="sr">Sleeve Round</label>
+                  <input id="sr" type="number" name="sr" placeholder="Sleeve Round" required>
+                </div>
+                <div class="input-group">
+                  <label for="hl">Half Length</label>
+                  <input id="hl" type="number" name="hl" placeholder="Half Length" required>
+                </div>
+                <div class="input-group">
+                  <label for="sleeve">Sleeve Length</label>
+                  <input id="sleeve" type="number" name="sleeve" placeholder="Sleeve Length" required>
+                </div>
+                <div class="input-group">
+                  <label for="ubr">UBR</label>
+                  <input id="ubr" type="number" name="ubr" placeholder="UBR" required>
+                </div>
+                <div class="input-group">
+                  <label for="nl">Neckline</label>
+                  <input id="nl" type="number" name="nl" placeholder="Neckline" required>
+                </div>
+                <div class="input-group">
+                  <label for="buba">Buba</label>
+                  <input id="buba" type="number" name="buba" placeholder="Buba">
+                </div>
+                <div class="input-group">
+                  <label for="os">Off Shoulder</label>
+                  <input id="os" type="number" name="os" placeholder="Off Shoulder" required>
+                </div>
+                <div class="input-group">
+                  <label for="bh">Blouse Hip</label>
+                  <input id="bh" type="number" name="bh" placeholder="Blouse Hip" required>
+                </div>
+                <div class="input-group">
+                  <label for="bl">Blouse Length</label>
+                  <input id="bl" type="number" name="bl" placeholder="Blouse Length" required>
+                </div>
+                <div class="input-group">
+                  <label for="fc">Four Corner</label>
+                  <input id="fc" type="number" name="fc" placeholder="Four Corner" required>
+                </div>
+                <div class="input-group">
+                  <label for="bp">Breast Point</label>
+                  <input id="bp" type="number" name="bp" placeholder="Breast Point" required>
+                </div>
+                <div class="input-group">
+                  <label for="sh">Skirt Hip</label>
+                  <input id="sh" type="number" name="sh" placeholder="Skirt Hip" required>
+                </div>
+                <div class="input-group">
+                  <label for="sl">Skirt Length</label>
+                  <input id="sl" type="number" name="sl" placeholder="Skirt Length" required>
+                </div>
+                <div class="input-group">
+                  <label for="sw">Skirt Waist</label>
+                  <input id="sw" type="number" name="sw" placeholder="Skirt Waist" required>
+                </div>
+                <div class="input-group">
+                  <label for="tw">Trouser Waist</label>
+                  <input id="tw" type="number" name="tw" placeholder="Trouser Waist">
+                </div>
+                <div class="input-group">
+                  <label for="trouser">Trouser Length</label>
+                  <input id="trouser" type="number" name="trouser" placeholder="Trouser Length">
+                </div>
+                <div class="input-group">
+                  <label for="thigh">Thigh</label>
+                  <input id="thigh" type="number" name="thigh" placeholder="Thigh">
+                </div>
+                <div class="input-group">
+                  <label for="bc">Breast Cup</label>
+                  <input id="bc" type="number" name="bc" placeholder="Breast Cup" required>
+                </div>
+                <div class="input-group">
+                  <label for="n2n">NIP-2-NIP</label>
+                  <input id="n2n" type="number" name="n2n" placeholder="NIP-2-NIP" required>
+                </div>
+                <div class="input-group">
+                  <label for="lw">Low Waist</label>
+                  <input id="lw" type="number" name="lw" placeholder="Low Waist" required>
+                </div>
+                <div class="input-group">
+                  <label for="fl1">Full Length 1</label>
+                  <input id="fl1" type="number" name="fl1" placeholder="Full Length 1" required>
+                </div>
+                <div class="input-group">
+                  <label for="fl2">Full Length 2</label>
+                  <input id="fl2" type="number" name="fl2" placeholder="Full Length 2" required>
+                </div>
+                <div class="input-group">
+                  <label for="fl3">Full Length 3</label>
+                  <input id="fl3" type="number" name="fl3" placeholder="Full Length 3">
+                </div>
+                <div class="input-group">
+                  <label for="fl4">Full Length 4</label>
+                  <input id="fl4" type="number" name="fl4" placeholder="Full Length 4">
+                </div>
+                <div class="input-group full">
+                  <label for="notes">Extra Notes</label>
+                  <input id="notes" type="text" name="notes" placeholder="Optional notes">
+                </div>
+                <div class="form-actions">
+                  <button type="submit">Add Customer</button>
+                </div>
+            </form>
+      </section>
+      <div class="customer-list">
+        <div class="card">
+            <h3>Adeola John</h3>
+            <p>Bust: 36 | Waist:28 | Hip:40</p>
+            <small>Last Measured:12/04/2024</small>
+        </div>
+        <div class="card">
+            <h3>Adeola John</h3>
+            <p>Bust: 36 | Waist:28 | Hip:40</p>
+            <small>Last Measured:12/04/2024</small>
+        </div>
+        <div class="card">
+            <h3>Chinedu John Okafor</h3>
+            <p>Bust: 36 | Waist:28 | Hip:40</p>
+            <small>Last Measured:12/04/2024</small>
+        </div>
+
+      </div>
+
+      <nav class="bottom-nav">
+        <a class="bottom-link" href="clients.html">Clients</a>
+        <a class="bottom-link" href="backup.html">Backup</a>
+        <a class="bottom-link" href="settings.html">Settings</a>
+      </nav>
+      <div id="search-overlay" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+          <button id="search-close" class="modal-close" aria-label="Close">×</button>
+          <h3>Search Customers</h3>
+          <section class="search-bar">
+            <input id="home-search" type="search" placeholder="Search by name, phone, or measurement..." />
+            <button id="home-search-clear" class="icon-btn" aria-label="Clear search">×</button>
+          </section>
+          <ul id="home-suggestions" class="suggestions" style="display:none"></ul>
+        </div>
+      </div>
+      <div id="detail-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+          <button id="modal-close" class="modal-close">×</button>
+          <h3 id="modal-title"></h3>
+          <div id="modal-body"></div>
+          <div class="modal-actions">
+            <button id="edit-customer">Edit</button>
+            <button id="save-customer" style="display:none">Save</button>
+            <button id="cancel-edit" class="secondary" style="display:none">Cancel</button>
+            <button id="delete-customer" class="danger">Delete</button>
+            <button id="close-modal" class="secondary">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="index.js"></script>
+    <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+  </body>
+</html>

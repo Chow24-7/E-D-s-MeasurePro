@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backup - E&D MeasurePro</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6a1b9a">
+</head>
+<body>
+  <div class="app">
+    <nav class="navbar">
+      <a href="index.html" class="brand">E&D's Measure<span>Pro</span></a>
+    </nav>
+
+    <section class="welcome">
+      <h3>Backup & Restore</h3>
+      <p>Export your customers to a file or restore from a backup.</p>
+    </section>
+
+    <div class="card">
+      <h3>Export</h3>
+      <p>Download all customers as a JSON file you can keep anywhere.</p>
+      <button id="export-json">Download Backup (JSON)</button>
+    </div>
+
+    <div class="card">
+      <h3>Restore</h3>
+      <p>Choose a previously saved JSON backup to restore.</p>
+      <input type="file" id="restore-file" accept="application/json">
+      <button id="restore-btn">Restore From File</button>
+      <small id="restore-status"></small>
+    </div>
+
+    <nav class="bottom-nav">
+      <a class="bottom-link" href="index.html">Home</a>
+      <a class="bottom-link" href="clients.html">Clients</a>
+      <a class="bottom-link" href="settings.html">Settings</a>
+    </nav>
+  </div>
+
+  <script src="backup.js"></script>
+  <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+</body>
+</html>

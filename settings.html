@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - E&D MeasurePro</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6a1b9a">
+</head>
+<body>
+  <div class="app">
+    <nav class="navbar">
+      <a href="index.html" class="brand">E&D's Measure<span>Pro</span></a>
+    </nav>
+
+    <section class="welcome">
+      <h3>Settings</h3>
+      <p>Manage data and app preferences.</p>
+    </section>
+
+    <div class="card">
+      <h3>Data</h3>
+      <p>Clear all saved customers from this device.</p>
+      <button id="clear-data" class="danger">Clear All Customers</button>
+      <small id="settings-status"></small>
+    </div>
+
+    <div class="card">
+      <h3>About</h3>
+      <p>MeasurePro keeps your customers' measurements on your device for offline access.</p>
+      <small>Version 1.0</small>
+    </div>
+
+    <nav class="bottom-nav">
+      <a class="bottom-link" href="index.html">Home</a>
+      <a class="bottom-link" href="clients.html">Clients</a>
+      <a class="bottom-link" href="backup.html">Backup</a>
+    </nav>
+  </div>
+
+  <script src="settings.js"></script>
+  <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+</body>
+</html>
