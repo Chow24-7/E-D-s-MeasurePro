@@ -219,6 +219,18 @@ function buildDetails(customer) {
   return `${list}${customer.notes ? '<p class="notes">Notes: ' + customer.notes + '</p>' : ''}${meta}`;
 }
 
+// initial render and optional prefilled query via URL
+renderCustomers();
+try {
+  const url = new URL(window.location.href);
+  const q = url.searchParams.get('q');
+  if (q) {
+    searchInput.value = q;
+    const filtered = customers.filter(c => matchesQuery(c, q));
+    renderCustomers(filtered);
+  }
+} catch(_){}
+
 function buildEditForm(customer) {
   const keys = Object.keys(customer).filter(k => !['id','date'].includes(k));
   const html = keys.map(k => {
