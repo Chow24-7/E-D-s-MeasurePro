@@ -27,6 +27,26 @@
     </div>
 
     <div class="card">
+      <h3>Cloud Sync (optional)</h3>
+      <p>Provide your Firebase config and a Sync Code to share across devices.</p>
+      <div class="form-grid">
+        <div class="input-group"><label for="apiKey">apiKey</label><input id="apiKey" type="text" placeholder="Firebase apiKey"></div>
+        <div class="input-group"><label for="authDomain">authDomain</label><input id="authDomain" type="text" placeholder="example.firebaseapp.com"></div>
+        <div class="input-group"><label for="projectId">projectId</label><input id="projectId" type="text" placeholder="your-project-id"></div>
+        <div class="input-group"><label for="appId">appId</label><input id="appId" type="text" placeholder="1:...:web:..."></div>
+        <div class="input-group"><label for="storageBucket">storageBucket</label><input id="storageBucket" type="text" placeholder="your-project.appspot.com"></div>
+        <div class="input-group"><label for="messagingSenderId">messagingSenderId</label><input id="messagingSenderId" type="text" placeholder="Sender ID"></div>
+        <div class="input-group"><label for="measurementId">measurementId</label><input id="measurementId" type="text" placeholder="G-XXXXXXXXXX"></div>
+        <div class="input-group full"><label for="syncCode">Sync Code</label><input id="syncCode" type="text" placeholder="Any shared code e.g. EBERE-BOOK"></div>
+      </div>
+      <div class="form-actions">
+        <button id="save-sync">Save & Test</button>
+        <button id="sync-now" class="secondary">Sync Now</button>
+      </div>
+      <small id="sync-status"></small>
+    </div>
+
+    <div class="card">
       <h3>About</h3>
       <p>MeasurePro keeps your customers' measurements on your device for offline access.</p>
       <small>Version 1.0</small>
@@ -40,6 +60,7 @@
   </div>
 
   <script src="settings.js"></script>
+  <script src="sync.js"></script>
   <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
 </body>
 </html>
