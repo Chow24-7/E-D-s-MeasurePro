@@ -8,6 +8,7 @@ const ASSETS = [
   'styles.css',
   'index.js',
   'clients.js',
+  'sync.js',
   'backup.js',
   'settings.js',
   'manifest.json'
