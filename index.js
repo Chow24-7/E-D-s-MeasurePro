@@ -163,6 +163,7 @@ form.addEventListener('submit', (e) => {
 
   customers.push(newCustomer);
   persist();
+  if (window.MeasureSync && window.MeasureSync.pushNow) window.MeasureSync.pushNow(customers);
 
   renderCustomers();
 
@@ -193,6 +194,7 @@ deleteBtn.addEventListener('click', () => {
   persist();
   renderCustomers();
   closeModal();
+  if (window.MeasureSync && window.MeasureSync.pushNow) window.MeasureSync.pushNow(customers);
 });
 
 // Navigate to Clients search
@@ -332,4 +334,11 @@ saveBtn.addEventListener('click', () => {
   cancelEditBtn.style.display = 'none';
   editBtn.style.display = '';
   deleteBtn.style.display = '';
+  if (window.MeasureSync && window.MeasureSync.pushNow) window.MeasureSync.pushNow(customers);
+});
+
+// re-render when remote updates arrive
+window.addEventListener('measure-sync-updated', () => {
+  customers = JSON.parse(localStorage.getItem('customers')) || [];
+  renderCustomers();
 });
