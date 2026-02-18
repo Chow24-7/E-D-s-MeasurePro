@@ -16,7 +16,10 @@
       }
     }
     if (!firebase.apps.length) firebase.initializeApp(cfg);
-    try { await firebase.auth().signInAnonymously(); } catch(e) {}
+    try { await firebase.auth().signInAnonymously(); }
+    catch(e) {
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Anonymous auth failed: '+ (e && e.message || 'Unknown') } }));
+    }
     try { if (cfg.measurementId && firebase.analytics) firebase.analytics(); } catch(_){}
     return firebase.firestore();
   }
@@ -30,28 +33,44 @@
     return Array.from(byId.values());
   }
   async function pull(db, code){
-    const snap = await db.collection('measurepro').doc(code).get();
-    if (!snap.exists) return null;
-    const data = snap.data() || {};
-    const remote = Array.isArray(data.customers)?data.customers:[];
-    const merged = mergeCustomers(getCustomers(), remote);
-    setCustomers(merged);
-    window.dispatchEvent(new Event('measure-sync-updated'));
-    return merged.length;
+    try {
+      const snap = await db.collection('measurepro').doc(code).get();
+      if (!snap.exists) return null;
+      const data = snap.data() || {};
+      const remote = Array.isArray(data.customers)?data.customers:[];
+      const merged = mergeCustomers(getCustomers(), remote);
+      setCustomers(merged);
+      window.dispatchEvent(new Event('measure-sync-updated'));
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Pulled '+merged.length+' customers' } }));
+      return merged.length;
+    } catch(e) {
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Pull failed: '+ (e && e.message || 'Unknown') } }));
+      throw e;
+    }
   }
   async function push(db, code, customers){
-    await db.collection('measurepro').doc(code).set({ customers, updatedAt: Date.now() }, { merge: true });
+    try {
+      await db.collection('measurepro').doc(code).set({ customers, updatedAt: Date.now() }, { merge: true });
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'success', message:'Pushed '+(customers?customers.length:0)+' customers' } }));
+    } catch(e) {
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Push failed: '+ (e && e.message || 'Unknown') } }));
+      throw e;
+    }
   }
   async function initAndStart(){
     const cfg = readConfig();
     if (!cfg || !cfg.enabled || !cfg.apiKey || !cfg.projectId || !cfg.appId || !cfg.syncCode) return;
     try {
       const db = await ensureFirebase(cfg);
-      await pull(db, cfg.syncCode);
+      try { await pull(db, cfg.syncCode); } catch(_){}
       // real-time updates
-      db.collection('measurepro').doc(cfg.syncCode).onSnapshot(async () => {
-        await pull(db, cfg.syncCode);
-      });
+      try {
+        db.collection('measurepro').doc(cfg.syncCode).onSnapshot(async () => {
+          try { await pull(db, cfg.syncCode); } catch(_){}
+        });
+      } catch(e) {
+        window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Realtime listener failed: '+(e && e.message || 'Unknown') } }));
+      }
       window.MeasureSync = {
         isEnabled: true,
         async pushNow(list){ try { await push(db, cfg.syncCode, list||getCustomers()); } catch(e){} },
@@ -59,6 +78,7 @@
       };
     } catch(e) {
       window.MeasureSync = { isEnabled:false };
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Init failed: '+ (e && e.message || 'Unknown') } }));
     }
   }
   // kick on load
