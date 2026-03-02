@@ -1,5 +1,6 @@
 ;(function(){
   const KEY = 'cloudSyncConfig';
+  const DOC_ID = 'EbereFamily-MeasurePro-2026';
   function readConfig(){
     try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; }
   }
@@ -34,13 +35,13 @@
     local.forEach(put); remote.forEach(put);
     return Array.from(byId.values());
   }
-  async function pull(db, code){
+  async function pull(db){
     try {
-      const snap = await db.collection('measurepro').doc(code).get();
+      const snap = await db.collection('measurepro').doc(DOC_ID).get();
       const local = getCustomers();
       if (!snap.exists) {
         if (local.length) {
-          await push(db, code, local);
+          await push(db, local);
           window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'No remote data — pushed '+local.length+' customers' } }));
         } else {
           window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Pulled 0 customers' } }));
@@ -50,7 +51,7 @@
       const data = snap.data() || {};
       const remote = Array.isArray(data.customers)?data.customers:[];
       if (!remote.length && local.length) {
-        await push(db, code, local);
+        await push(db, local);
         window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Remote empty — pushed '+local.length+' customers' } }));
         return local.length;
       }
@@ -64,9 +65,9 @@
       throw e;
     }
   }
-  async function push(db, code, customers){
+  async function push(db, customers){
     try {
-      await db.collection('measurepro').doc(code).set({ customers, updatedAt: Date.now() }, { merge: true });
+      await db.collection('measurepro').doc(DOC_ID).set({ customers, updatedAt: Date.now() }, { merge: true });
       window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'success', message:'Pushed '+(customers?customers.length:0)+' customers' } }));
     } catch(e) {
       window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Push failed: '+ (e && e.message || 'Unknown') } }));
@@ -75,25 +76,25 @@
   }
   async function initAndStart(){
     const cfg = readConfig();
-    if (!cfg || !cfg.enabled || !cfg.apiKey || !cfg.projectId || !cfg.appId || !cfg.syncCode) return;
+    if (!cfg || !cfg.enabled || !cfg.apiKey || !cfg.projectId || !cfg.appId) return;
     try {
       if (!navigator.onLine) {
         window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Device offline — will retry when online' } }));
       }
       const db = await ensureFirebase(cfg);
-      try { await pull(db, cfg.syncCode); } catch(_){}
+      try { await pull(db); } catch(_){}
       // real-time updates
       try {
-        db.collection('measurepro').doc(cfg.syncCode).onSnapshot(async () => {
-          try { await pull(db, cfg.syncCode); } catch(_){}
+        db.collection('measurepro').doc(DOC_ID).onSnapshot(async () => {
+          try { await pull(db); } catch(_){}
         });
       } catch(e) {
         window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Realtime listener failed: '+(e && e.message || 'Unknown') } }));
       }
       window.MeasureSync = {
         isEnabled: true,
-        async pushNow(list){ try { await push(db, cfg.syncCode, list||getCustomers()); } catch(e){} },
-        async pullNow(){ try { await pull(db, cfg.syncCode); } catch(e){} }
+        async pushNow(list){ try { await push(db, list||getCustomers()); } catch(e){} },
+        async pullNow(){ try { await pull(db); } catch(e){} }
       };
       try {
         window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'success', message:'Sync connected' } }));
