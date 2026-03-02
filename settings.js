@@ -3,7 +3,7 @@ const statusEl = document.getElementById('settings-status');
 const saveSyncBtn = document.getElementById('save-sync');
 const syncNowBtn = document.getElementById('sync-now');
 const syncStatus = document.getElementById('sync-status');
-const fields = ['apiKey','authDomain','projectId','appId','storageBucket','messagingSenderId','measurementId','syncCode'];
+const fields = ['apiKey','authDomain','projectId','appId','storageBucket','messagingSenderId','measurementId'];
 
 clearBtn.addEventListener('click', () => {
   const ok = confirm('Are you sure you want to delete? Once you delete, you cannot recover customers information and will have to re-enter again.');
@@ -34,8 +34,8 @@ async function saveAndTest(){
     if (!window.__syncConfig) throw new Error('Sync module not loaded');
     const db = await window.__syncConfig.ensureFirebase(cfg);
     if (!db) throw new Error('Firebase not available');
-    // simple write/read test
-    const docRef = db.collection('measurepro').doc(cfg.syncCode || 'test');
+    // simple write/read test against fixed family document
+    const docRef = db.collection('measurepro').doc('EbereFamily-MeasurePro-2026');
     await docRef.set({ __health: Date.now() }, { merge: true });
     const snap = await docRef.get();
     if (!snap.exists) throw new Error('Write verification failed');
@@ -57,7 +57,7 @@ async function syncNow(){
       if (window.__syncConfig) {
         const cfg = JSON.parse(localStorage.getItem('cloudSyncConfig')||'null');
         const db = await window.__syncConfig.ensureFirebase(cfg);
-        await db.collection('measurepro').doc(cfg.syncCode).set({ customers, updatedAt: Date.now() }, { merge: true });
+        await db.collection('measurepro').doc('EbereFamily-MeasurePro-2026').set({ customers, updatedAt: Date.now() }, { merge: true });
         syncStatus.textContent = 'Sync pushed.';
       }
     }
