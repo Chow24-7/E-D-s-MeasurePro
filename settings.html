@@ -12,6 +12,7 @@
   <div class="app">
     <nav class="navbar">
       <a href="index.html" class="brand">E&D's Measure<span>Pro</span></a>
+      <span id="sync-pill" class="sync-pill sync-off">Sync Off</span>
     </nav>
 
     <section class="welcome">
@@ -28,7 +29,7 @@
 
     <div class="card">
       <h3>Cloud Sync (optional)</h3>
-      <p>Provide your Firebase config and a Sync Code to share across devices.</p>
+      <p>Provide your Firebase config. All devices will share one family measurement book automatically.</p>
       <div class="form-grid">
         <div class="input-group"><label for="apiKey">apiKey</label><input id="apiKey" type="text" placeholder="Firebase apiKey"></div>
         <div class="input-group"><label for="authDomain">authDomain</label><input id="authDomain" type="text" placeholder="example.firebaseapp.com"></div>
@@ -37,7 +38,6 @@
         <div class="input-group"><label for="storageBucket">storageBucket</label><input id="storageBucket" type="text" placeholder="your-project.appspot.com"></div>
         <div class="input-group"><label for="messagingSenderId">messagingSenderId</label><input id="messagingSenderId" type="text" placeholder="Sender ID"></div>
         <div class="input-group"><label for="measurementId">measurementId</label><input id="measurementId" type="text" placeholder="G-XXXXXXXXXX"></div>
-        <div class="input-group full"><label for="syncCode">Sync Code</label><input id="syncCode" type="text" placeholder="Any shared code e.g. EBERE-BOOK"></div>
       </div>
       <div class="form-actions">
         <button id="save-sync">Save & Test</button>
