@@ -128,7 +128,7 @@ function buildEditForm(customer) {
   const keys = Object.keys(customer).filter(k => !['id','date'].includes(k));
   const html = keys.map(k => {
     const label = friendlyLabel(k);
-    const type = ['name','phone','notes'].includes(k) ? 'text' : 'number';
+    const type = 'text';
     return `
       <div class="input-group">
         <label for="edit-${k}">${label}</label>
@@ -203,7 +203,7 @@ const searchOverlay = document.getElementById('search-overlay');
 const searchOverlayClose = document.getElementById('search-close');
 const homeSearchInput = document.getElementById('home-search');
 const homeSuggestions = document.getElementById('home-suggestions');
-const homeSearchClear = document.getElementById('home-search-clear');
+const homeSearchEnter = document.getElementById('home-search-enter');
 
 if (searchBtnEl) {
   searchBtnEl.addEventListener('click', (e) => {
@@ -280,13 +280,26 @@ if (searchOverlayClose) {
   searchOverlayClose.addEventListener('click', () => searchOverlay.classList.add('hidden'));
 }
 
-if (homeSearchClear && homeSearchInput) {
-  homeSearchClear.addEventListener('click', () => {
-    homeSearchInput.value = '';
-    buildAndRenderHomeSuggestions('');
-    homeSearchInput.focus();
-  });
+function submitHomeSearch(){
+  if (!homeSearchInput) return;
+  const q = homeSearchInput.value.trim();
+  const lis = homeSuggestions ? homeSuggestions.querySelectorAll('li') : [];
+  if (lis && lis.length) {
+    const id = lis[0].getAttribute('data-id');
+    if (id) {
+      openModalById(id);
+      if (searchOverlay) searchOverlay.classList.add('hidden');
+      return;
+    }
+  }
+  if (q) {
+    window.location.href = 'clients.html?q=' + encodeURIComponent(q);
+    if (searchOverlay) searchOverlay.classList.add('hidden');
+  }
 }
+
+if (homeSearchEnter) homeSearchEnter.addEventListener('click', submitHomeSearch);
+if (homeSearchInput) homeSearchInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') { e.preventDefault(); submitHomeSearch(); } });
 
 editBtn.addEventListener('click', () => {
   const id = editBtn.dataset.id;
