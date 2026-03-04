@@ -39,26 +39,32 @@
     try {
       const snap = await db.collection('measurepro').doc(DOC_ID).get();
       const local = getCustomers();
+      
       if (!snap.exists) {
         if (local.length) {
           await push(db, local);
-          window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'No remote data — pushed '+local.length+' customers' } }));
-        } else {
-          window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Pulled 0 customers' } }));
+          window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Seeded cloud with ' + local.length + ' customers' } }));
         }
         return local.length;
       }
+
       const data = snap.data() || {};
-      const remote = Array.isArray(data.customers)?data.customers:[];
-      const remoteUpdatedAt = data.updatedAt || 0;
+      const remote = Array.isArray(data.customers) ? data.customers : [];
       
-      // If remote exists, just use it (handles deletions)
-      setCustomers(remote);
+      // Smart Merge: combine local and remote, taking the most recent version of each customer
+      const merged = mergeCustomers(local, remote);
+      
+      // If the merged result is different from remote, update the cloud
+      if (JSON.stringify(merged) !== JSON.stringify(remote)) {
+        await push(db, merged);
+      }
+      
+      setCustomers(merged);
       window.dispatchEvent(new Event('measure-sync-updated'));
-      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Pulled '+remote.length+' customers' } }));
-      return remote.length;
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'success', message:'Synced ' + merged.length + ' customers' } }));
+      return merged.length;
     } catch(e) {
-      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Pull failed: '+ (e && e.message || 'Unknown') } }));
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Sync error: ' + (e.message || 'Check connection') } }));
       throw e;
     }
   }
@@ -76,33 +82,41 @@
     if (!cfg || !cfg.enabled || !cfg.apiKey || !cfg.projectId || !cfg.appId) return;
     try {
       if (!navigator.onLine) {
-        window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Device offline — will retry when online' } }));
+        window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Offline' } }));
       }
       const db = await ensureFirebase(cfg);
+      const DOC_ID = 'EbereFamily-MeasurePro-2026';
+      
+      // Initial Sync
       try { await pull(db); } catch(_){}
-      // real-time updates
-      try {
-        db.collection('measurepro').doc(DOC_ID).onSnapshot(async () => {
-          try { await pull(db); } catch(_){}
-        });
-      } catch(e) {
-        window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Realtime listener failed: '+(e && e.message || 'Unknown') } }));
-      }
+      
+      // Real-time listener
+      db.collection('measurepro').doc(DOC_ID).onSnapshot(async (snap) => {
+        if (!snap.exists) return;
+        const data = snap.data() || {};
+        const remote = Array.isArray(data.customers) ? data.customers : [];
+        const local = getCustomers();
+        
+        // Only update if remote is actually different to avoid loops
+        if (JSON.stringify(remote) !== JSON.stringify(local)) {
+          const merged = mergeCustomers(local, remote);
+          setCustomers(merged);
+          window.dispatchEvent(new Event('measure-sync-updated'));
+          const ts = new Date().toLocaleTimeString();
+          window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'success', message:'Live sync: ' + ts } }));
+        }
+      }, (e) => {
+        window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Sync lost' } }));
+      });
+
       window.MeasureSync = {
         isEnabled: true,
         async pushNow(list){ try { await push(db, list||getCustomers()); } catch(e){} },
         async pullNow(){ try { await pull(db); } catch(e){} }
       };
-      try {
-        window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'success', message:'Sync connected' } }));
-      } catch(_){ }
-      // Retry pull when network returns
-      window.addEventListener('online', () => {
-        if (window.MeasureSync && window.MeasureSync.pullNow) window.MeasureSync.pullNow();
-      });
     } catch(e) {
       window.MeasureSync = { isEnabled:false };
-      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Init failed: '+ (e && e.message || 'Unknown') } }));
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Init failed' } }));
     }
   }
   // kick on load
