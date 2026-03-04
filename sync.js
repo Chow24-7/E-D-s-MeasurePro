@@ -33,7 +33,7 @@
     const byId = new Map();
     const put = (c)=>{ if(!c.id) return; const ex=byId.get(c.id); if(!ex){ byId.set(c.id, c); return; } const a=parseDate(ex.date), b=parseDate(c.date); byId.set(c.id, b>=a?c:ex); };
     local.forEach(put); remote.forEach(put);
-    return Array.from(byId.values());
+    return Array.from(byId.values()).sort((a, b) => parseDate(b.date) - parseDate(a.date));
   }
   async function pull(db){
     try {
@@ -50,16 +50,13 @@
       }
       const data = snap.data() || {};
       const remote = Array.isArray(data.customers)?data.customers:[];
-      if (!remote.length && local.length) {
-        await push(db, local);
-        window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Remote empty — pushed '+local.length+' customers' } }));
-        return local.length;
-      }
-      const merged = mergeCustomers(local, remote);
-      setCustomers(merged);
+      const remoteUpdatedAt = data.updatedAt || 0;
+      
+      // If remote exists, just use it (handles deletions)
+      setCustomers(remote);
       window.dispatchEvent(new Event('measure-sync-updated'));
-      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Pulled '+merged.length+' customers' } }));
-      return merged.length;
+      window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'info', message:'Pulled '+remote.length+' customers' } }));
+      return remote.length;
     } catch(e) {
       window.dispatchEvent(new CustomEvent('measure-sync-status', { detail: { level:'error', message:'Pull failed: '+ (e && e.message || 'Unknown') } }));
       throw e;
