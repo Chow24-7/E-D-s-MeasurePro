@@ -47,6 +47,12 @@ const labelMap = {
   fl4: 'Full Length 4'
 };
 
+const measurementOrder = [
+  'bust', 'waist', 'hip', 'shoulder', 'sr', 'hl', 'sleeve', 'ubr', 'nl', 'buba',
+  'os', 'bh', 'bl', 'fc', 'bp', 'sh', 'sl', 'sw', 'tw', 'trouser', 'thigh',
+  'bc', 'n2n', 'lw', 'fl1', 'fl2', 'fl3', 'fl4'
+];
+
 const capitalize = s => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 function friendlyLabel(key) {
   const k = String(key);
@@ -78,10 +84,12 @@ function renderCustomers() {
     const card = document.createElement('div');
     card.className = 'card';
     card.dataset.id = customer.id;
-    const measurements = Object.entries(customer)
-      .filter(([key]) => !['name', 'phone', 'date', 'notes', 'id'].includes(key))
-      .map(([key, value]) => `${friendlyLabel(key)}: ${value}`)
+
+    const measurements = measurementOrder
+      .filter(key => customer[key] !== undefined && customer[key] !== '')
+      .map(key => `${friendlyLabel(key)}: ${customer[key]}`)
       .join(' | ');
+
     const notes = customer.notes ? `<p class="notes">Notes: ${customer.notes}</p>` : '';
     card.innerHTML = `
       <h3>${customer.name || 'Unnamed'}</h3>
@@ -113,11 +121,13 @@ function closeModal() {
 }
 
 function buildDetails(customer) {
-  const entries = Object.entries(customer)
-    .filter(([k]) => !['id', 'name', 'date'].includes(k));
-  const list = entries.map(([k, v]) => `<div class="card" style="margin-bottom:8px"><strong>${friendlyLabel(k)}:</strong> ${v}</div>`).join('');
+  const measurementItems = measurementOrder
+    .filter(key => customer[key] !== undefined && customer[key] !== '')
+    .map(key => `<div class="card" style="margin-bottom:8px"><strong>${friendlyLabel(key)}:</strong> ${customer[key]}</div>`)
+    .join('');
+
   const meta = `<small>${customer.date ? 'Last Measured: ' + customer.date : ''} ${customer.phone ? '• ' + customer.phone : ''}</small>`;
-  return `${list}${customer.notes ? '<p class="notes">Notes: ' + customer.notes + '</p>' : ''}${meta}`;
+  return `${measurementItems}${customer.notes ? '<p class="notes">Notes: ' + customer.notes + '</p>' : ''}${meta}`;
 }
 
 function numericKeys() {
