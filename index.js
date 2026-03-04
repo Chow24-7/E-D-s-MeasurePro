@@ -48,7 +48,7 @@ const labelMap = {
 };
 
 const measurementOrder = [
-  'bust', 'waist', 'hip', 'shoulder', 'sr', 'hl', 'sleeve', 'ubr', 'nl', 'buba',
+  'name', 'phone', 'bust', 'waist', 'hip', 'shoulder', 'sr', 'hl', 'sleeve', 'ubr', 'nl', 'buba',
   'os', 'bh', 'bl', 'fc', 'bp', 'sh', 'sl', 'sw', 'tw', 'trouser', 'thigh',
   'bc', 'n2n', 'lw', 'fl1', 'fl2', 'fl3', 'fl4'
 ];
