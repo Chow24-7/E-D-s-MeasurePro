@@ -80,13 +80,19 @@ ensureIds();
 // Function to render customers
 function renderCustomers() {
   customerList.innerHTML = '';
-  customers.forEach(customer => {
+  
+  // Only show the 3 most recent customers on the homepage
+  const recentCustomers = [...customers].sort((a, b) => {
+    return parseDate(b.date) - parseDate(a.date);
+  }).slice(0, 3);
+
+  recentCustomers.forEach(customer => {
     const card = document.createElement('div');
     card.className = 'card';
     card.dataset.id = customer.id;
 
     const measurements = measurementOrder
-      .filter(key => customer[key] !== undefined && customer[key] !== '')
+      .filter(key => customer[key] !== undefined && customer[key] !== '' && !['name', 'phone'].includes(key))
       .map(key => `${friendlyLabel(key)}: ${customer[key]}`)
       .join(' | ');
 
@@ -99,6 +105,11 @@ function renderCustomers() {
     `;
     customerList.appendChild(card);
   });
+}
+
+function parseDate(d) {
+  const t = Date.parse(d || '');
+  return isNaN(t) ? 0 : t;
 }
 
 function openModalById(id) {
