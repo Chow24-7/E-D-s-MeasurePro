@@ -81,9 +81,12 @@ ensureIds();
 function renderCustomers() {
   customerList.innerHTML = '';
   
-  // Only show the 3 most recent customers on the homepage
+  // Sort by date (newest first) and take the 3 most recent
   const recentCustomers = [...customers].sort((a, b) => {
-    return parseDate(b.date) - parseDate(a.date);
+    // If IDs are timestamps, they are very reliable for "most recent"
+    const timeA = parseInt(a.id, 36) || parseDate(a.date);
+    const timeB = parseInt(b.id, 36) || parseDate(b.date);
+    return timeB - timeA;
   }).slice(0, 3);
 
   recentCustomers.forEach(customer => {
