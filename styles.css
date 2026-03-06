@@ -12,7 +12,9 @@ body {
 .navbar {
     background: linear-gradient(135deg, #6a1b9a, #8e24aa);
     padding: 15px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     color: white;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -20,11 +22,11 @@ body {
     position: relative;
 }
 .brand {
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: bold;
     color: white;
     text-decoration: none;
-    display: inline-block;
-    transition: transform .15s ease, opacity .15s ease;
+    transition: opacity .2s ease, transform .2s ease;
 }
 .brand span {
     color: black;
@@ -32,18 +34,16 @@ body {
 .brand:hover { opacity: .9; transform: translateY(-1px); }
 
 .sync-pill {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 12px;
+  margin-top: 8px;
+  font-size: 10px;
   color: #1b5e20;
   background: #e8f5e9;
   border: 1px solid #c8e6c9;
-  padding: 4px 8px;
+  padding: 2px 8px;
   border-radius: 999px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   cursor: pointer;
+  white-space: nowrap;
 }
 .sync-pill.sync-error { color: #b00020; background: #ffebee; border-color: #ffcdd2; }
 .sync-pill.sync-info { color: #1a237e; background: #e8eaf6; border-color: #c5cae9; }
